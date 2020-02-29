@@ -23,9 +23,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,6 +37,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Maps extends FragmentActivity implements
@@ -59,11 +62,14 @@ public class Maps extends FragmentActivity implements
 
     double OrigionalLatitude = 20;
     double OrigionalLongtitude = 20;
+    double temp;
+    double wind;
     String weather;
     float zoomLevel = 15.0f;
     private GoogleMap mMap;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +82,15 @@ public class Maps extends FragmentActivity implements
             }
             if (getIntent().hasExtra("Longitude")) {
                 OrigionalLongtitude = extras.getDouble("Longitude");
+            }
+            if (getIntent().hasExtra("temp")) {
+                temp = Double.parseDouble(Objects.requireNonNull(extras.getString("temp")));
+            }
+            if (getIntent().hasExtra("wind")) {
+                wind = Double.parseDouble(Objects.requireNonNull(extras.getString("wind")));
+            }
+            if (getIntent().hasExtra("weather")) {
+                weather = extras.getString("weather");
             }
         }
 

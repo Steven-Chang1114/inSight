@@ -47,10 +47,10 @@ public class Welcome extends AppCompatActivity {
     private RequestQueue queue;
     double longitude;
     double latitude;
-    private RequestQueue mQueue;
     private static final int REQUEST_CODE = 101;
 
     private TextView weather;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +94,7 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
-         mQueue = Volley.newRequestQueue(this);
-
-         findWeather();
+         //findWeather();
 
          start.setOnClickListener(new View.OnClickListener(){
              @Override
@@ -107,11 +105,19 @@ public class Welcome extends AppCompatActivity {
 
     }
 
+    public void openWelcome(){
+        intent = new Intent(getBaseContext(), Maps.class);
+        findWeather();
+        intent.putExtra("Latitude", latitude);
+        intent.putExtra("Longitude", longitude);
+        startActivity(intent);
+    }
+
     private void findWeather(){
         int lati = (int) latitude;
         int longti = (int) longitude;
         String key = "cc0f792d36bf210e4b27018738d42901";
-        final String url ="https://api.openweathermap.org/data/2.5/weather?lat=39&lon=135&appid="+key;
+        final String url ="https://api.openweathermap.org/data/2.5/weather?lat="+lati+"&lon="+longti+"&appid="+key;
 
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -120,12 +126,18 @@ public class Welcome extends AppCompatActivity {
 
                     JSONObject main = response.getJSONObject("main");
                     JSONArray array = response.getJSONArray("weather");
+                    JSONObject wind = response.getJSONObject("wind");
                     JSONObject obj = array.getJSONObject(0);
 
                     String temp = String.valueOf(main.getDouble("temp"));
                     String weatherData = obj.getString("main");
+                    String windSpeed = wind.getString("speed");
 
-                    weather.setText(weatherData);
+                    intent.putExtra("temp", temp);
+                    intent.putExtra("weather", weatherData);
+                    intent.putExtra("wind", windSpeed);
+
+                    //weather.setText(windSpeed);
 
                 } catch (JSONException e) {
                     weather.setText(url);
@@ -143,13 +155,6 @@ public class Welcome extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(jor);
 
-    }
-
-    public void openWelcome(){
-        Intent intent = new Intent(getBaseContext(), Maps.class);
-        intent.putExtra("Latitude", latitude);
-        intent.putExtra("Longitude", longitude);
-        startActivity(intent);
     }
 
 
