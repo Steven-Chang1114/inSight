@@ -1,6 +1,7 @@
 package com.example.greentrip;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     Location currentLocation;
     FusedLocationProviderClient client;
+    double longitude;
+    double latitude;
     private static final int REQUEST_CODE = 101;
 
     @Override
@@ -49,15 +52,16 @@ public class MainActivity extends AppCompatActivity {
         }
         Task<Location> task = client.getLastLocation();
 
+        //Detect the location and show on the interface
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                double longtitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
 
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 try {
-                    List<Address> addresses = geocoder.getFromLocation(latitude, longtitude, 1);
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                     String cityName = addresses.get(0).getSubAdminArea();
                     String countryName = addresses.get(0).getCountryName();
 
@@ -71,10 +75,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Jump to another page
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                intent.putExtra("Latitude", latitude);
+                intent.putExtra("Longitude", longitude);
+                startActivity(intent);
             }
         });
 

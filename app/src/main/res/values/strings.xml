@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GreenTrip</string>
     <string name="map_key" translatable="false">AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo</string>
+    <string name="title_activity_main_page">Map</string>
 </resources>
