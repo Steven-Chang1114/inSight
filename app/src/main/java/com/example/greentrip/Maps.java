@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,9 +21,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+
 public class Maps extends FragmentActivity implements OnMapReadyCallback {
-    double latitude = 20;
-    double longtitude = 20;
+    double OrigionalLatitude = 20;
+    double OrigionalLongtitude = 20;
+    float zoomLevel = 15.0f;
     private GoogleMap mMap;
 
     LocationManager locationManager;
@@ -34,10 +40,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (getIntent().hasExtra("Latitude")) {
-                latitude = extras.getDouble("Latitude");
+                OrigionalLatitude = extras.getDouble("Latitude");
             }
             if (getIntent().hasExtra("Longitude")) {
-                longtitude = extras.getDouble("Longitude");
+                OrigionalLongtitude = extras.getDouble("Longitude");
             }
         }
 
@@ -57,28 +63,79 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 
-            }
+            locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double lat = location.getLatitude();
+                    double lon = location.getLongitude();
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
+                    LatLng latLng = new LatLng(lat, lon);
+                    Geocoder geocoder = new Geocoder(getApplicationContext());
+                    try {
+                        List<Address> addressList =  geocoder.getFromLocation(lat, lon, 1);
+                        String str = addressList.get(0).getLocality() + ",";
+                        str += addressList.get(0).getCountryName();
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(str));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            }
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
 
-            @Override
-            public void onProviderEnabled(String provider) {
+                }
 
-            }
+                @Override
+                public void onProviderEnabled(String provider) {
 
-            @Override
-            public void onProviderDisabled(String provider) {
+                }
 
-            }
-        });
+                @Override
+                public void onProviderDisabled(String provider) {
 
+                }
+            });
+
+        }else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double lat = location.getLatitude();
+                    double lon = location.getLongitude();
+
+                    LatLng latLng = new LatLng(lat, lon);
+                    Geocoder geocoder = new Geocoder(getApplicationContext());
+                    try {
+                        List<Address> addressList =  geocoder.getFromLocation(lat, lon, 1);
+                        String str = addressList.get(0).getLocality() + ",";
+                        str += addressList.get(0).getCountryName();
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(str));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
 
 
     }
@@ -98,10 +155,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng currentLocation = new LatLng(latitude, longtitude);
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Here you go!"));
-        float zoomLevel = 15.0f;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+        //LatLng currentLocation = new LatLng(OrigionalLatitude, OrigionalLongtitude);
+        //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Here you go!"));
+        //float zoomLevel = 15.0f;
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
     }
     public void markerplacer (String[] names, double[] latitude, double[] longitude, String[] descrip){
         for (int i =0;i<names.length;i++){
