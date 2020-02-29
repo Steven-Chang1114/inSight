@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button start = (Button) findViewById(R.id.start);
-        //The placeholder will greet based on your current loaction
+        //The placeholder will greet based on your current location
         final TextView greeting = (TextView) findViewById(R.id.greeting);
         //Find current location
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     String cityName = addresses.get(0).getSubAdminArea();
                     String countryName = addresses.get(0).getCountryName();
 
-                    if(location != null){
-                        greeting.setText("Hi You are in " + cityName + " in " + countryName + " now!" );
-                    }
+                    greeting.setText("Hi You are in " + cityName + " in " + countryName + " now!" );
 
                 } catch (IOException e) {
                     greeting.setText(e.toString());
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Jump to another page
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
