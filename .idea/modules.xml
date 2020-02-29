@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TripForGreen.iml" filepath="$PROJECT_DIR$/TripForGreen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GreenTrip.iml" filepath="$PROJECT_DIR$/GreenTrip.iml" group="GreenTrip" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="GreenTrip/app" />
     </modules>
   </component>
 </project>
