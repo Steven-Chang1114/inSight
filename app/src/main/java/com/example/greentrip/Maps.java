@@ -9,6 +9,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -58,7 +59,18 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         LatLng currentLocation = new LatLng(latitude, longtitude);
         mMap.addMarker(new MarkerOptions().position(currentLocation).title("Here you go!"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        float zoomLevel = 15.0f;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+    }
+    public void markerplacer (String[] names, double[] latitude, double[] longitude, String[] descrip){
+        for (int i =0;i<names.length;i++){
+            mMap.addMarker(new MarkerOptions().position(new LatLng(longitude[i],latitude[i]))
+                    .title(names[i])
+                    .flat(false)
+                    .snippet(descrip[i])
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        }
+
     }
 }
 
