@@ -2,8 +2,8 @@ package com.example.greentrip;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,27 +12,33 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainPage extends FragmentActivity implements OnMapReadyCallback {
-
+public class Maps extends FragmentActivity implements OnMapReadyCallback {
+    double latitude = 20;
+    double longtitude = 20;
     private GoogleMap mMap;
-    double longtitude;
-    double latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_page);
+        setContentView(R.layout.activity_maps);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (getIntent().hasExtra("Latitude")) {
+                latitude = extras.getDouble("Latitude");
+            }
+            if (getIntent().hasExtra("Longitude")) {
+                longtitude = extras.getDouble("Longitude");
+            }
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if(getIntent().hasExtra("Latitude")){
-            latitude = Double.parseDouble(getIntent().getExtras().getString("Latitude"));
-        }
-        if(getIntent().hasExtra("Longitude")){
-            longtitude = Double.parseDouble(getIntent().getExtras().getString("Longitude"));
-        }
+
+
     }
 
 
@@ -50,8 +56,12 @@ public class MainPage extends FragmentActivity implements OnMapReadyCallback {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng currentLocation = new LatLng(latitude, longtitude);
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Here you go!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
     }
 }
+
+/*
+
+*/

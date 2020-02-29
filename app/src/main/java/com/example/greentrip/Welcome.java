@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class Welcome extends AppCompatActivity {
 
     Location currentLocation;
     FusedLocationProviderClient client;
@@ -37,17 +37,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_welcome);
 
-        Button start = (Button) findViewById(R.id.start);
+        Button start = (Button) findViewById(R.id.startTrip);
         //The placeholder will greet based on your current location
         final TextView greeting = (TextView) findViewById(R.id.greeting);
         //Find current location
         client = LocationServices.getFusedLocationProviderClient(this);
 
-        if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if(ActivityCompat.checkSelfPermission(Welcome.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
 
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            ActivityCompat.requestPermissions(Welcome.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             return;
         }
         Task<Location> task = client.getLastLocation();
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
 
-                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                Geocoder geocoder = new Geocoder(Welcome.this, Locale.getDefault());
                 try {
                     List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                     String cityName = addresses.get(0).getSubAdminArea();
@@ -76,18 +76,17 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                intent.putExtra("Latitude", latitude);
-                intent.putExtra("Longitude", longitude);
-                startActivity(intent);
+                openWelcome() ;
             }
         });
 
     }
 
-    //private void requestPermission(){
-      //  ActivityCompat.requestPermissions(this, new String[]{ACCESS_FIND_LOCATION}, 1);
-
-    //}
+    public void openWelcome(){
+        Intent intent = new Intent(getBaseContext(), Maps.class);
+        intent.putExtra("Latitude", latitude);
+        intent.putExtra("Longitude", longitude);
+        startActivity(intent);
+    }
 
 }
