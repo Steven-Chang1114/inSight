@@ -1,5 +1,6 @@
 package com.example.greentrip;
 
+import android.widget.TextView;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -49,6 +50,8 @@ public class Welcome extends AppCompatActivity {
     private RequestQueue mQueue;
     private static final int REQUEST_CODE = 101;
 
+    private TextView weather;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +60,7 @@ public class Welcome extends AppCompatActivity {
         Button start = (Button) findViewById(R.id.startTrip);
         //The placeholder will greet based on your current location
         final TextView greeting = (TextView) findViewById(R.id.greeting);
-        final TextView weather = (TextView) findViewById(R.id.textView);
+        weather = (TextView) findViewById(R.id.textView);
 
 
         //Find current location
@@ -93,40 +96,52 @@ public class Welcome extends AppCompatActivity {
 
          mQueue = Volley.newRequestQueue(this);
 
-         jsonParse(latitude, longitude);
+         findWeather();
 
-
-
+         start.setOnClickListener(new View.OnClickListener(){
+             @Override
+             public void onClick(View v) {
+                openWelcome();
+             }
+         });
 
     }
 
-    private void jsonParse(double lat, double lon){
-        int lati = (int) lat;
-        int longti = (int) lon;
+    private void findWeather(){
+        int lati = (int) latitude;
+        int longti = (int) longitude;
         String key = "cc0f792d36bf210e4b27018738d42901";
-        String url ="http://api.openweathermap.org/data/2.5/weather?lat="+lati+"&lon="+longti+"&appid="+key;
+        final String url ="https://api.openweathermap.org/data/2.5/weather?lat=39&lon=135&appid="+key;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    JSONArray jsonArray = response.getJSONArray("weather");
 
-                    JSONObject weathers = jsonArray.getJSONObject(0);
-                    String wea = weathers.getString("main");
+                    JSONObject main = response.getJSONObject("main");
+                    JSONArray array = response.getJSONArray("weather");
+                    JSONObject obj = array.getJSONObject(0);
+
+                    String temp = String.valueOf(main.getDouble("temp"));
+                    String weatherData = obj.getString("main");
+
+                    weather.setText(weatherData);
 
                 } catch (JSONException e) {
+                    weather.setText(url);
                     e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                weather.setText(String.valueOf(error));
                 error.printStackTrace();
             }
         });
 
-        mQueue.add(request);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jor);
 
     }
 
