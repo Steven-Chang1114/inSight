@@ -58,14 +58,15 @@ public class MainActivity extends AppCompatActivity {
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 try {
                     List<Address> addresses = geocoder.getFromLocation(latitude, longtitude, 1);
-                    String cityName = addresses.get(0).getAddressLine(0);
+                    String cityName = addresses.get(0).getSubAdminArea();
+                    String countryName = addresses.get(0).getCountryName();
 
                     if(location != null){
-                        greeting.setText("Hi You are in " + cityName + "now!" );
+                        greeting.setText("Hi You are in " + cityName + " in " + countryName + " now!" );
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    greeting.setText(e.toString());
                 }
             }
         });
