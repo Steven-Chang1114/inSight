@@ -16,22 +16,37 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
 
 public class Welcome extends AppCompatActivity {
 
     Location currentLocation;
     FusedLocationProviderClient client;
+    private RequestQueue queue;
     double longitude;
     double latitude;
+    private RequestQueue mQueue;
     private static final int REQUEST_CODE = 101;
 
     @Override
@@ -42,6 +57,9 @@ public class Welcome extends AppCompatActivity {
         Button start = (Button) findViewById(R.id.startTrip);
         //The placeholder will greet based on your current location
         final TextView greeting = (TextView) findViewById(R.id.greeting);
+        final TextView weather = (TextView) findViewById(R.id.textView);
+
+
         //Find current location
         client = LocationServices.getFusedLocationProviderClient(this);
 
@@ -73,12 +91,42 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
-        start.setOnClickListener(new View.OnClickListener() {
+         mQueue = Volley.newRequestQueue(this);
+
+         jsonParse(latitude, longitude);
+
+
+
+
+    }
+
+    private void jsonParse(double lat, double lon){
+        int lati = (int) lat;
+        int longti = (int) lon;
+        String key = "cc0f792d36bf210e4b27018738d42901";
+        String url ="http://api.openweathermap.org/data/2.5/weather?lat="+lati+"&lon="+longti+"&appid="+key;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
-            public void onClick(View v) {
-                openWelcome() ;
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("weather");
+
+                    JSONObject weathers = jsonArray.getJSONObject(0);
+                    String wea = weathers.getString("main");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
             }
         });
+
+        mQueue.add(request);
 
     }
 
@@ -88,5 +136,7 @@ public class Welcome extends AppCompatActivity {
         intent.putExtra("Longitude", longitude);
         startActivity(intent);
     }
+
+
 
 }
