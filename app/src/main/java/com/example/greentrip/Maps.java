@@ -1,5 +1,6 @@
 package com.example.greentrip;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +26,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
-public class Maps extends FragmentActivity implements OnMapReadyCallback {
+public class Maps extends FragmentActivity implements OnMyLocationButtonClickListener,
+        OnMyLocationClickListener, OnMapReadyCallback {
     double OrigionalLatitude = 20;
     double OrigionalLongtitude = 20;
     float zoomLevel = 15.0f;
@@ -71,13 +74,17 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     double lat = location.getLatitude();
                     double lon = location.getLongitude();
 
-                    LatLng latLng = new LatLng(lat, lon);
+                    LatLng latLng = null;
+                    LatLng newCoor = latLng;
+                    latLng= new LatLng(lat, lon);
                     Geocoder geocoder = new Geocoder(getApplicationContext());
                     try {
                         List<Address> addressList =  geocoder.getFromLocation(lat, lon, 1);
-                        String str = addressList.get(0).getLocality() + ",";
-                        str += addressList.get(0).getCountryName();
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(str));
+                        //Everytime when latLng and newCoor is not the same, we use new marker to cover the old one
+                        if (latLng != newCoor) {
+                            mMap.
+                                    addMarker(new MarkerOptions().position(latLng).title("You are here"));
+                        }
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -169,5 +176,16 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
 
+    }
+
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
+
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
     }
 }
