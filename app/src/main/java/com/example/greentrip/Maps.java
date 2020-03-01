@@ -99,6 +99,20 @@ public class Maps extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //Implement our travel stuff
+        if(weather.equals("Thunderstorm") || weather.equals("Rain") || weather.equals("Snow") || weather.equals("Tornado") ||
+           weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
+           weather.equals("Ash")){
+            //Weather is super bad all indoor
+
+        }else if(weather.equals("Drizzle") || weather.equals("Mist")){
+            //weather is meh, most indoor, no attraction
+
+        }else if(weather.equals("Clear") || weather.equals("Cloud")){
+            //Weather is good, attraction included
+
+        }
+
 
     }
 
