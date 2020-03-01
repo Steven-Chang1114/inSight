@@ -121,8 +121,8 @@ public class Welcome extends AppCompatActivity {
     }
 
     private void findWeather(){
-        int lati = (int) latitude;
-        int longti = (int) longitude;
+        int lati = (int) 56;
+        int longti = (int) -3;
         String key = "cc0f792d36bf210e4b27018738d42901";
         final String url ="https://api.openweathermap.org/data/2.5/weather?lat="+lati+"&lon="+longti+"&appid="+key;
 

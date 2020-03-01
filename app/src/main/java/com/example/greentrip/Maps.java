@@ -68,11 +68,11 @@ public class Maps extends FragmentActivity implements
      */
     private boolean mPermissionDenied = false;
 
-    double OrigionalLatitude = 20;
-    double OrigionalLongtitude = 20;
+    double OrigionalLatitude;
+    double OrigionalLongtitude;
     double tempK;
     double wind;
-    String weather;
+    String wea;
     double temp;
     float zoomLevel = 15.0f;
     private GoogleMap mMap;
@@ -83,6 +83,11 @@ public class Maps extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         TextView temperature = (TextView) findViewById(R.id.temp);
         TextView windSpeed = (TextView) findViewById(R.id.wind);
@@ -99,7 +104,7 @@ public class Maps extends FragmentActivity implements
 
             if (getIntent().hasExtra("temp")) {
                 //In Kelvin
-                tempK = Double.parseDouble(Objects.requireNonNull(extras.getString("temp")));
+                tempK = Double.parseDouble(extras.getString("temp"));
                 temp = tempK - 273.15;
                 temperature.setText("Temperature: " + String.valueOf(temp));
             }
@@ -108,15 +113,10 @@ public class Maps extends FragmentActivity implements
                 windSpeed.setText("Wind Speed: " + String.valueOf(wind));
             }
             if (getIntent().hasExtra("weather")) {
-                weather = extras.getString("weather");
-                weahterData.setText("Weather: " + weather);
+                wea = extras.getString("weather");
+                weahterData.setText("Weather: " + wea);
             }
         }
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         //getNearByMarker();
 
         getNearByMarker();
@@ -125,8 +125,8 @@ public class Maps extends FragmentActivity implements
     }
     private void getNearByMarker() {
         String APIKEY = "5ae2e3f221c38a28845f05b69371569391d28e8ad62d7f28fac24e6f";
-        Integer RADIUS = 5000;
-        Integer NUMBER_OF_OBJECTS = 500;
+        Integer RADIUS = 10000;
+        Integer NUMBER_OF_OBJECTS = 1000;
 
         String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+APIKEY);
 
@@ -161,7 +161,7 @@ public class Maps extends FragmentActivity implements
                         String title = prop.getString("name");
 
                         boolean isIndoor = isIndoor(kind);
-                        boolean forIndoor = recommendTravelPlan(weather, wind, temp);
+                        boolean forIndoor = recommendTravelPlan(wea, wind, temp);
                         boolean res;
 
                         if(forIndoor && isIndoor){
