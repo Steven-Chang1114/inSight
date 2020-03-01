@@ -146,7 +146,7 @@ public class Maps extends FragmentActivity implements
                         JSONArray coords = geo.getJSONArray("coordinates");
 
                         int rate = prop.getInt("rate");
-                        String kind = prop.getString("kind");
+                        String kind = prop.getString("kinds");
 
                         Double[] realCoods = new Double[2];
 
@@ -160,7 +160,9 @@ public class Maps extends FragmentActivity implements
                         double lat = realCoods[1];
                         String title = prop.getString("name");
 
-                        if(rate > 6) {
+                        //boolean isIndoor = isIndoor(kind);
+
+                        if(rate > 5) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat, lon))
                                     .title(title)
@@ -185,6 +187,12 @@ public class Maps extends FragmentActivity implements
         RequestQueue lala = Volley.newRequestQueue(this);
         lala.add(que);
     }
+
+    /**
+    private boolean isIndoor(String kind) {
+        if(kind.contains())
+    }
+     */
 
     private void recommendTravelPlan(String weather, double wind, double temp) {
         /*
@@ -230,16 +238,6 @@ public class Maps extends FragmentActivity implements
 
 
         //Implement
-
-    }
-    public void markerplacer (String[] names, double[] latitude, double[] longitude, String[] descrip){
-        for (int i =0;i<names.length;i++){
-            mMap.addMarker(new MarkerOptions().position(new LatLng(longitude[i],latitude[i]))
-                    .title(names[i])
-                    .flat(false)
-                    .snippet(descrip[i])
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        }
 
     }
 
