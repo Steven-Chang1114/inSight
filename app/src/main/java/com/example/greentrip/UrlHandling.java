@@ -1,10 +1,12 @@
 package com.example.greentrip;
 
+import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class UrlHandling {
 
@@ -18,9 +20,16 @@ public class UrlHandling {
     public static String getUrlContents(String stringUrl) {
         try {
             URL url = new URL(stringUrl);
-            return readUrl(url);
+            String output = new GetJSONTask().execute(url).get();
+            return output;
         } catch (IOException err) {
             err.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -44,4 +53,17 @@ public class UrlHandling {
         }
     }
 
+    private static class GetJSONTask extends AsyncTask<URL, Integer, String> {
+        protected String doInBackground(URL... url) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(url[0].openStream()))) {
+                StringBuilder contents = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) contents.append(inputLine);
+                return contents.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+    }
 }

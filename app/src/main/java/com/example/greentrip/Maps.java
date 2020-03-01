@@ -4,6 +4,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,7 +38,12 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -111,10 +117,81 @@ public class Maps extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //getNearByMarker();
 
         //Implement our travel stuff
-        recommendTravelPlan(weather, wind, temp);
+        //Log.d("DDD", "COOR");
+        Coordinate coordinate = new Coordinate(37.4419, -122.1430);
 
+        PlacesNearby currentPlace = new PlacesNearby(coordinate);
+
+        ArrayList<Place> places = currentPlace.getPlacesNearby();
+        if(places == null){
+            Log.d("DDD", "NULL");
+        }else{
+            Log.d("DDD", "NO");
+        }
+
+        getNearByMarker();
+
+
+    }
+    private void getNearByMarker() {
+        String APIKEY = "5ae2e3f221c38a28845f05b69371569391d28e8ad62d7f28fac24e6f";
+        Integer RADIUS = 5000;
+        Integer NUMBER_OF_OBJECTS = 500;
+
+        Coordinate coordinate;
+        String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+APIKEY);
+        //coordinate = new Coordinate(OrigionalLatitude, OrigionalLongtitude);
+
+        JsonObjectRequest que = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+
+                    JSONArray array = response.getJSONArray("features");
+
+
+                    for(int i = 0; i < array.length(); i++){
+                        JSONObject obj = array.getJSONObject(i);
+                        JSONObject prop = obj.getJSONObject("properties");
+                        JSONObject geo = obj.getJSONObject("geometry");
+                        JSONArray coords = geo.getJSONArray("coordinates");
+
+                        Double[] realCoods = new Double[2];
+
+                        if (coords != null) {
+                            for (int j=0;j<=1;j++){
+                                realCoods[j] = Double.parseDouble(coords.get(i).toString());
+                            }
+                        }
+
+                        double lon = realCoods[0];
+                        double lat = realCoods[1];
+                        String title = "i";
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(lat, lon))
+                                .title(title));
+                    }
+
+                } catch (JSONException e) {
+                    //txt.setText(String.valueOf(e));
+                    e.printStackTrace();
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+
+            }
+        });
+
+        RequestQueue lala = Volley.newRequestQueue(this);
+        lala.add(que);
     }
 
     private void recommendTravelPlan(String weather, double wind, double temp) {
@@ -158,6 +235,9 @@ public class Maps extends FragmentActivity implements
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
+
+        //Implement
+
     }
     public void markerplacer (String[] names, double[] latitude, double[] longitude, String[] descrip){
         for (int i =0;i<names.length;i++){

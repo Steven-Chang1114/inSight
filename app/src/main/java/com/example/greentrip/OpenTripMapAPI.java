@@ -40,6 +40,7 @@ public class OpenTripMapAPI {
                                                   , RADIUS
                                                   , NUMBER_OF_OBJECTS
                                                   , APIKEY);
+        //new UrlHandling.getPlacesTask.execute(positionUrl);
         String placesJSON = UrlHandling.getUrlContents(positionUrl);
         return new JSON (placesJSON);
     }

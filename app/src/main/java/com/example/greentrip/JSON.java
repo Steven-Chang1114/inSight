@@ -149,7 +149,7 @@ public class JSON {
         String latitudeString = json.substring(0, latitudeEnd);
 
         // Check for braces in string.
-        latitudeString = latitudeString.contains("}") ? latitudeString.replaceAll("}","") : latitudeString;
+        latitudeString = latitudeString.contains("}") ? String.valueOf(0) : latitudeString;
         double latitude = Double.parseDouble(latitudeString);
 
         // After getting the latitude, cut it off the String.
