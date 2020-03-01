@@ -1,11 +1,24 @@
 package com.example.greentrip;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
+import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,42 +26,17 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
-public class Maps extends FragmentActivity implements
+public class Maps extends AppCompatActivity implements
         OnMyLocationButtonClickListener,
         OnMyLocationClickListener,
         OnMapReadyCallback,
@@ -85,8 +73,8 @@ public class Maps extends FragmentActivity implements
         setContentView(R.layout.activity_maps);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         TextView temperature = (TextView) findViewById(R.id.temp);
@@ -170,10 +158,13 @@ public class Maps extends FragmentActivity implements
                             res = false;
                         }
 
+                        String emission = emission_checker(OrigionalLatitude, OrigionalLongtitude, lon, lat);
+
                         if(res) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat, lon))
                                     .title(title)
+                                    .snippet(emission)
                                     .visible(true));
                         }
                     }
@@ -195,6 +186,21 @@ public class Maps extends FragmentActivity implements
         RequestQueue lala = Volley.newRequestQueue(this);
         lala.add(que);
     }
+
+    public String emission_checker(double originlat, double originlng, double destlng, double destlat){
+        float[] results = new float[10];
+        Location.distanceBetween(originlat,originlng,destlat,destlng,results);
+        int cf = (int)((results[0])* 0.186);
+        String CarbonFootprint;
+        if(cf <= 50) {
+            CarbonFootprint = "The Carbon Emission for Driving is " + cf + "g so WALK!!!";
+        }else{
+            CarbonFootprint = "The Carbon Emission for Driving is " + cf + "g but you can cycle tho";
+        }
+        return CarbonFootprint;
+
+    }
+
 
 
     private boolean isIndoor(String kind) {
@@ -267,10 +273,14 @@ public class Maps extends FragmentActivity implements
         // location permission from the user. This sample does not include
         // a request for location permission.
         LatLng latLng = new LatLng(OrigionalLatitude, OrigionalLongtitude);
+        mMap.setMyLocationEnabled(true);
+        enableMyLocation();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
-        enableMyLocation();
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
 
 
         //Implement
@@ -310,6 +320,7 @@ public class Maps extends FragmentActivity implements
                                            @NonNull int[] grantResults) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return;
+
         }
 
         if (com.example.greentrip.PermissionUtils.isPermissionGranted(permissions, grantResults,
