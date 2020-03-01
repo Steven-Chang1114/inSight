@@ -1,25 +1,28 @@
+import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
 
 public class indoorsOrOutdoors {
-    public static String[] convert(List<String> list){
+    //converts the list received from the other file to an array
+    private static String[] convert(List<String> list){
         return list.toArray(new String[list.size()]);
     }
 
+    //returns whether a location/activity is outdoors or not; the result will be stored in the app
     public static boolean isOutdoors(ArrayList<String> attributes){
-
+// TODO: generalize for any arguments
         Boolean finalAnswer = true;
         String[] argsArray = convert(attributes);
         switch(argsArray.length){
             case 2:
-                finalAnswer = inOrOutTwoDim(argsArray[0]);
+                finalAnswer = inOrOutTwoDim(argsArray);
                 break;
             case 3:
-                finalAnswer = inOrOutThreeDim(argsArray[0], argsArray[1], argsArray[2]);
+                finalAnswer = inOrOutThreeDim(argsArray);
                 break;
             case 4:
-                finalAnswer = inOrOutFourDim(argsArray[1], argsArray[2], argsArray[3]);
+                finalAnswer = inOrOutFourDim(argsArray);
                 break;
             case 5:
                 finalAnswer = false;
@@ -29,9 +32,9 @@ public class indoorsOrOutdoors {
 
         }
 
-    public static Boolean inOrOutTwoDim(String args0){
+    private static Boolean inOrOutTwoDim(String[] argsArray){
         Boolean indoorsOrOutdoors;
-        if (args0.equals("accommodations") || args0.equals("adult")){
+        if (Arrays.asList(argsArray).contains("accommodations") || Arrays.asList(argsArray).contains("adult")){
             indoorsOrOutdoors = false;
         } else {
             indoorsOrOutdoors = true;
@@ -39,11 +42,12 @@ public class indoorsOrOutdoors {
         return indoorsOrOutdoors;
     }
 
-    public static Boolean inOrOutThreeDim(String args0, String args1, String args2){
+    private static Boolean inOrOutThreeDim(String[] argsArray){
         Boolean indoorsOrOutdoors;
-        if (args0.equals("sport") || args1.equals("industrial_facilities") || args1.equals("other")
-                || args2.equals("lighthouses") || args2.equals("glaciers") || args2.equals("outdoor")
-                || args2.equals("picnic_site")){
+        if (Arrays.asList(argsArray).contains("sport") || Arrays.asList(argsArray).contains("industrial_facilities")
+                || Arrays.asList(argsArray).contains("other") || Arrays.asList(argsArray).contains("lighthouses")
+                || Arrays.asList(argsArray).contains("glaciers") || Arrays.asList(argsArray).contains("outdoor")
+                || Arrays.asList(argsArray).contains("picnic_site")){
             indoorsOrOutdoors = true;
         } else {
             indoorsOrOutdoors = false;
@@ -51,12 +55,14 @@ public class indoorsOrOutdoors {
         return indoorsOrOutdoors;
     }
 
-    public static Boolean inOrOutFourDim(String args1, String args2, String args3){
+    private static Boolean inOrOutFourDim(String[] argsArray){
         Boolean indoorsOrOutdoors;
-        if (args1.equals("historic") || args1.equals("natural") || args1.equals("other")
-                || args2.equals("bridges") || args2.equals("towers") || args2.equals("urban_environment")
-                || args3.equals("amphitheatres") || args3.equals("destroyed_objects") || args3.equals("farms")
-                || args3.equals("pyramids") || args3.equals("triumphal_archs") || args3.equals("wineries")){
+        if (Arrays.asList(argsArray).contains("historic") || Arrays.asList(argsArray).contains("natural")
+                || Arrays.asList(argsArray).contains("other") || Arrays.asList(argsArray).contains("bridges")
+                || Arrays.asList(argsArray).contains("towers") || Arrays.asList(argsArray).contains("urban_environment")
+                || Arrays.asList(argsArray).contains("amphitheatres") || Arrays.asList(argsArray).contains("destroyed_objects")
+                || Arrays.asList(argsArray).contains("farms") || Arrays.asList(argsArray).contains("pyramids")
+                || Arrays.asList(argsArray).contains("triumphal_archs") || Arrays.asList(argsArray).contains("wineries")){
             indoorsOrOutdoors = true;
         } else {
             indoorsOrOutdoors = false;
@@ -70,7 +76,7 @@ public class indoorsOrOutdoors {
         for(int i = 0; i < args.length; i++){
             test.add(args[i]);
         }
-        
+
         System.out.println(isOutdoors(test));
     }
 
