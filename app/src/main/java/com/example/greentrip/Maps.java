@@ -62,9 +62,10 @@ public class Maps extends FragmentActivity implements
 
     double OrigionalLatitude = 20;
     double OrigionalLongtitude = 20;
-    double temp;
+    double tempK;
     double wind;
     String weather;
+    double temp;
     float zoomLevel = 15.0f;
     private GoogleMap mMap;
 
@@ -84,7 +85,9 @@ public class Maps extends FragmentActivity implements
                 OrigionalLongtitude = extras.getDouble("Longitude");
             }
             if (getIntent().hasExtra("temp")) {
-                temp = Double.parseDouble(Objects.requireNonNull(extras.getString("temp")));
+                //In Kelvin
+                tempK = Double.parseDouble(Objects.requireNonNull(extras.getString("temp")));
+                temp = tempK - 273.15;
             }
             if (getIntent().hasExtra("wind")) {
                 wind = Double.parseDouble(Objects.requireNonNull(extras.getString("wind")));
@@ -100,20 +103,23 @@ public class Maps extends FragmentActivity implements
         mapFragment.getMapAsync(this);
 
         //Implement our travel stuff
+        recommendTravelPlan(weather, wind, temp);
+
+    }
+
+    private void recommendTravelPlan(String weather, double wind, double temp) {
         if(weather.equals("Thunderstorm") || weather.equals("Rain") || weather.equals("Snow") || weather.equals("Tornado") ||
-           weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
-           weather.equals("Ash")){
+                weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
+                weather.equals("Ash") || temp <= -20 || temp >= 45){
             //Weather is super bad all indoor
 
-        }else if(weather.equals("Drizzle") || weather.equals("Mist")){
+        }else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35){
             //weather is meh, most indoor, no attraction
 
         }else if(weather.equals("Clear") || weather.equals("Cloud")){
             //Weather is good, attraction included
 
         }
-
-
     }
 
 
