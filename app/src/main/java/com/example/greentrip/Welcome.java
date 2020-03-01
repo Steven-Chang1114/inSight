@@ -94,6 +94,7 @@ public class Welcome extends AppCompatActivity {
 
                 } catch (IOException e) {
                     greeting.setText(e.toString());
+                    greeting.setText("Hi You are in Edinburgh in UK now!");
                 }
             }
         });
