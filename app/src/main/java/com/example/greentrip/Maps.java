@@ -110,14 +110,17 @@ public class Maps extends FragmentActivity implements
     private void recommendTravelPlan(String weather, double wind, double temp) {
         if(weather.equals("Thunderstorm") || weather.equals("Rain") || weather.equals("Snow") || weather.equals("Tornado") ||
                 weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
-                weather.equals("Ash") || temp <= -20 || temp >= 45){
+                weather.equals("Ash") || temp <= -20 || temp >= 45 || wind >= 20){
             //Weather is super bad all indoor
 
-        }else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35){
+        }else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35 || wind >= 10){
             //weather is meh, most indoor, no attraction
 
         }else if(weather.equals("Clear") || weather.equals("Cloud")){
             //Weather is good, attraction included
+
+        }else{
+            //In case we forget some of the index, balance both indoor and outdoor
 
         }
     }
