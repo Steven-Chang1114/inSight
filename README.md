@@ -7,3 +7,4 @@
  * merge side branch to incorporate mindful banner at the start of the app 
  * add 'heat map' functionality (changing the color of the markers)
  * improve markdown
+ * add information for buidings using web scraper (?)
