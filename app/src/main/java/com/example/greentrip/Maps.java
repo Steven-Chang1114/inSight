@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -77,6 +78,10 @@ public class Maps extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        TextView temperature = (TextView) findViewById(R.id.temp);
+        TextView windSpeed = (TextView) findViewById(R.id.wind);
+        TextView weahterData = (TextView) findViewById(R.id.weather);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (getIntent().hasExtra("Latitude")) {
@@ -90,12 +95,15 @@ public class Maps extends FragmentActivity implements
                 //In Kelvin
                 tempK = Double.parseDouble(Objects.requireNonNull(extras.getString("temp")));
                 temp = tempK - 273.15;
+                temperature.setText("Temperature: " + String.valueOf(temp));
             }
             if (getIntent().hasExtra("wind")) {
                 wind = Double.parseDouble(Objects.requireNonNull(extras.getString("wind")));
+                windSpeed.setText("Wind Speed: " + String.valueOf(wind));
             }
             if (getIntent().hasExtra("weather")) {
                 weather = extras.getString("weather");
+                weahterData.setText("Weather: " + weather);
             }
         }
 
@@ -115,15 +123,18 @@ public class Maps extends FragmentActivity implements
                 weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
                 weather.equals("Ash") || temp <= -20 || temp >= 45 || wind >= 20){
             //Weather is super bad all indoor
+            //100% indoor
 
 
         }
 
         else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35 || wind >= 10){
             //weather is meh, most indoor, no attraction
+            //80% in 20% out
 
         }else if(weather.equals("Clear") || weather.equals("Cloud")){
             //Weather is good, attraction included
+            //40% in 60% out
 
         }else{
             //In case we forget some of the index, balance both indoor and outdoor

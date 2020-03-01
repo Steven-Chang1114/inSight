@@ -52,6 +52,7 @@ public class Welcome extends AppCompatActivity {
     double longitude;
     double latitude;
     private static final int REQUEST_CODE = 101;
+    String[] allData = new String[3];
 
     //private TextView weather;
     Intent intent;
@@ -97,7 +98,7 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
-         //findWeather();
+         findWeather();
 
          start.setOnClickListener(new View.OnClickListener(){
              @Override
@@ -110,9 +111,12 @@ public class Welcome extends AppCompatActivity {
 
     public void openWelcome(){
         intent = new Intent(getBaseContext(), Maps.class);
-        //findWeather();
+        findWeather();
         intent.putExtra("Latitude", latitude);
         intent.putExtra("Longitude", longitude);
+        intent.putExtra("weather", allData[0]);
+        intent.putExtra("temp", allData[1]);
+        intent.putExtra("wind", allData[2]);
         startActivity(intent);
     }
 
@@ -136,11 +140,10 @@ public class Welcome extends AppCompatActivity {
                     String weatherData = obj.getString("main");
                     String windSpeed = wind.getString("speed");
 
-                    intent.putExtra("temp", temp);
-                    intent.putExtra("weather", weatherData);
-                    intent.putExtra("wind", windSpeed);
+                    allData[0] = weatherData;
+                    allData[1] = temp;
+                    allData[2] = windSpeed;
 
-                    //weather.setText(windSpeed);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
