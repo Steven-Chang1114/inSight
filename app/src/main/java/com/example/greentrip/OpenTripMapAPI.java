@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class OpenTripMapAPI {
 
-    public static final String APIKEY = "5ae2e3f221c38a28845f05b625cbfedef199538daf298e1b14755b69";
+    public static final String APIKEY = "";
     public static final Integer RADIUS = 5000;
     public static final Integer NUMBER_OF_OBJECTS = 500;
     public static final Coordinate PALO_ALTO = new Coordinate(37.4419, -122.1430);
