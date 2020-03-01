@@ -1,3 +1,7 @@
+package com.example.greentrip;
+
+import com.example.greentrip.Place;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;

@@ -124,21 +124,15 @@ public class Maps extends FragmentActivity implements
                 weather.equals("Ash") || temp <= -20 || temp >= 45 || wind >= 20){
             //Weather is super bad all indoor
             //100% indoor
-
-
         }
-
         else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35 || wind >= 10){
             //weather is meh, most indoor, no attraction
             //80% in 20% out
-
         }else if(weather.equals("Clear") || weather.equals("Cloud")){
             //Weather is good, attraction included
             //40% in 60% out
-
         }else{
             //In case we forget some of the index, balance both indoor and outdoor
-
         }
         */
     }
@@ -183,7 +177,7 @@ public class Maps extends FragmentActivity implements
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+            com.example.greentrip.PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else if (mMap != null) {
             // Access to the location has been granted to the app.
@@ -211,7 +205,7 @@ public class Maps extends FragmentActivity implements
             return;
         }
 
-        if (PermissionUtils.isPermissionGranted(permissions, grantResults,
+        if (com.example.greentrip.PermissionUtils.isPermissionGranted(permissions, grantResults,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             // Enable the my location layer if the permission has been granted.
             enableMyLocation();
@@ -235,7 +229,7 @@ public class Maps extends FragmentActivity implements
      * Displays a dialog with error message explaining that the location permission is missing.
      */
     private void showMissingPermissionError() {
-        PermissionUtils.PermissionDeniedDialog
+        com.example.greentrip.PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 

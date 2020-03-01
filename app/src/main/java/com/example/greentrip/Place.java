@@ -1,3 +1,7 @@
+package com.example.greentrip;
+
+import com.example.greentrip.Coordinate;
+
 import java.util.ArrayList;
 
 public class Place {

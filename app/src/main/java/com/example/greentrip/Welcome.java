@@ -98,14 +98,14 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
-         findWeather();
+        findWeather();
 
-         start.setOnClickListener(new View.OnClickListener(){
-             @Override
-             public void onClick(View v) {
+        start.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
                 openWelcome();
-             }
-         });
+            }
+        });
 
     }
 

@@ -1,3 +1,5 @@
+package com.example.greentrip;
+
 public class Coordinate {
 
     /** absolute longitude maximum.*/

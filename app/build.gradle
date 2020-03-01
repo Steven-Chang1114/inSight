@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 
 }
 
@@ -36,6 +40,5 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'androidx.cardview:cardview:1.0.0'
-    //implementation "com.google.android.gms.maps.model.MarkerOptions"
 
 }

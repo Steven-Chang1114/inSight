@@ -1,3 +1,5 @@
+package com.example.greentrip;
+
 import java.io.IOException;
 
 public class OpenTripMapAPI {
@@ -28,7 +30,7 @@ public class OpenTripMapAPI {
 
     /**
      * Get a string of the places nearby in string with JSON format.
-     *
+
      * @param position current position of user
      * @return string of places nearby in JSON format
      * @throws IOException if invalid url created
@@ -41,5 +43,7 @@ public class OpenTripMapAPI {
         String placesJSON = UrlHandling.getUrlContents(positionUrl);
         return new JSON (placesJSON);
     }
+
+
 
 }

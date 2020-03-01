@@ -1,3 +1,7 @@
+package com.example.greentrip;
+
+import com.example.greentrip.OpenTripMapAPI;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -172,5 +176,14 @@ public class JSON {
         cutOff(longitudeEnd);
 
         return longitude;
+    }
+
+    public static void main (String[] args){
+        JSON placess = OpenTripMapAPI.getPlacesNearbyJSON(OpenTripMapAPI.PALO_ALTO);
+        ArrayList<Place> places = placess.jsonToPlaces();
+        for (Place place : places){
+            System.out.println(place.getName());
+        }
+        System.out.println();
     }
 }

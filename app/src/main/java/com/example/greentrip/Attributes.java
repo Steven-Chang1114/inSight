@@ -1,3 +1,5 @@
+package com.example.greentrip;
+
 import java.util.ArrayList;
 
 public class Attributes {
