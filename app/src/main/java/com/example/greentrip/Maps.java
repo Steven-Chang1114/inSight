@@ -33,6 +33,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -84,6 +85,7 @@ public class Maps extends FragmentActivity implements
             if (getIntent().hasExtra("Longitude")) {
                 OrigionalLongtitude = extras.getDouble("Longitude");
             }
+
             if (getIntent().hasExtra("temp")) {
                 //In Kelvin
                 tempK = Double.parseDouble(Objects.requireNonNull(extras.getString("temp")));
@@ -108,12 +110,16 @@ public class Maps extends FragmentActivity implements
     }
 
     private void recommendTravelPlan(String weather, double wind, double temp) {
+        /*
         if(weather.equals("Thunderstorm") || weather.equals("Rain") || weather.equals("Snow") || weather.equals("Tornado") ||
                 weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
                 weather.equals("Ash") || temp <= -20 || temp >= 45 || wind >= 20){
             //Weather is super bad all indoor
 
-        }else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35 || wind >= 10){
+
+        }
+
+        else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35 || wind >= 10){
             //weather is meh, most indoor, no attraction
 
         }else if(weather.equals("Clear") || weather.equals("Cloud")){
@@ -123,6 +129,7 @@ public class Maps extends FragmentActivity implements
             //In case we forget some of the index, balance both indoor and outdoor
 
         }
+        */
     }
 
 

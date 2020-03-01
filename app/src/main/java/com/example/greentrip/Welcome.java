@@ -1,5 +1,6 @@
 package com.example.greentrip;
 
+import android.util.Log;
 import android.widget.TextView;
 import android.Manifest;
 import android.content.Intent;
@@ -27,7 +28,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -49,7 +53,7 @@ public class Welcome extends AppCompatActivity {
     double latitude;
     private static final int REQUEST_CODE = 101;
 
-    private TextView weather;
+    //private TextView weather;
     Intent intent;
 
     @Override
@@ -60,7 +64,6 @@ public class Welcome extends AppCompatActivity {
         Button start = (Button) findViewById(R.id.startTrip);
         //The placeholder will greet based on your current location
         final TextView greeting = (TextView) findViewById(R.id.greeting);
-        weather = (TextView) findViewById(R.id.textView);
 
 
         //Find current location
@@ -107,7 +110,7 @@ public class Welcome extends AppCompatActivity {
 
     public void openWelcome(){
         intent = new Intent(getBaseContext(), Maps.class);
-        findWeather();
+        //findWeather();
         intent.putExtra("Latitude", latitude);
         intent.putExtra("Longitude", longitude);
         startActivity(intent);
@@ -140,14 +143,12 @@ public class Welcome extends AppCompatActivity {
                     //weather.setText(windSpeed);
 
                 } catch (JSONException e) {
-                    weather.setText(url);
                     e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                weather.setText(String.valueOf(error));
                 error.printStackTrace();
             }
         });
@@ -157,6 +158,12 @@ public class Welcome extends AppCompatActivity {
 
     }
 
-
-
+    private void addMarker(GoogleMap map, double lat, double lon,
+                           int title, int snippet, boolean flat,
+                           float rotation) {
+        map.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
+                .title(getString(title))
+                .snippet(getString(snippet))
+                .flat(flat).rotation(rotation));
+    }
 }
