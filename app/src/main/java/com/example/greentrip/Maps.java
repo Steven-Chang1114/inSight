@@ -274,7 +274,6 @@ public class Maps extends AppCompatActivity implements
         // a request for location permission.
         LatLng latLng = new LatLng(OrigionalLatitude, OrigionalLongtitude);
         mMap.setMyLocationEnabled(true);
-        enableMyLocation();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
