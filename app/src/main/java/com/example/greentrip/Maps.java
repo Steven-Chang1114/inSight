@@ -119,19 +119,6 @@ public class Maps extends FragmentActivity implements
         mapFragment.getMapAsync(this);
         //getNearByMarker();
 
-        //Implement our travel stuff
-        //Log.d("DDD", "COOR");
-        Coordinate coordinate = new Coordinate(37.4419, -122.1430);
-
-        PlacesNearby currentPlace = new PlacesNearby(coordinate);
-
-        ArrayList<Place> places = currentPlace.getPlacesNearby();
-        if(places == null){
-            Log.d("DDD", "NULL");
-        }else{
-            Log.d("DDD", "NO");
-        }
-
         getNearByMarker();
 
 
@@ -141,9 +128,7 @@ public class Maps extends FragmentActivity implements
         Integer RADIUS = 5000;
         Integer NUMBER_OF_OBJECTS = 500;
 
-        Coordinate coordinate;
         String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+APIKEY);
-        //coordinate = new Coordinate(OrigionalLatitude, OrigionalLongtitude);
 
         JsonObjectRequest que = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -160,20 +145,27 @@ public class Maps extends FragmentActivity implements
                         JSONObject geo = obj.getJSONObject("geometry");
                         JSONArray coords = geo.getJSONArray("coordinates");
 
+                        int rate = prop.getInt("rate");
+                        String kind = prop.getString("kind");
+
                         Double[] realCoods = new Double[2];
 
                         if (coords != null) {
                             for (int j=0;j<=1;j++){
-                                realCoods[j] = Double.parseDouble(coords.get(i).toString());
+                                realCoods[j] = Double.parseDouble(coords.get(j).toString());
                             }
                         }
 
                         double lon = realCoods[0];
                         double lat = realCoods[1];
-                        String title = "i";
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(lat, lon))
-                                .title(title));
+                        String title = prop.getString("name");
+
+                        if(rate > 6) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(lat, lon))
+                                    .title(title)
+                                    .visible(true));
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -235,6 +227,7 @@ public class Maps extends FragmentActivity implements
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
+
 
         //Implement
 
