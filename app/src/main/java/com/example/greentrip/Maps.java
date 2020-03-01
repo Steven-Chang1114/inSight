@@ -160,9 +160,17 @@ public class Maps extends FragmentActivity implements
                         double lat = realCoods[1];
                         String title = prop.getString("name");
 
-                        //boolean isIndoor = isIndoor(kind);
+                        boolean isIndoor = isIndoor(kind);
+                        boolean forIndoor = recommendTravelPlan(weather, wind, temp);
+                        boolean res;
 
-                        if(rate > 5) {
+                        if(forIndoor && isIndoor){
+                            res = true;
+                        }else{
+                            res = false;
+                        }
+
+                        if(res) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat, lon))
                                     .title(title)
@@ -188,30 +196,58 @@ public class Maps extends FragmentActivity implements
         lala.add(que);
     }
 
-    /**
-    private boolean isIndoor(String kind) {
-        if(kind.contains())
-    }
-     */
 
-    private void recommendTravelPlan(String weather, double wind, double temp) {
-        /*
+    private boolean isIndoor(String kind) {
+        if(kind.contains("accommodations") || kind.contains("adult") || kind.contains("lighthouses")){
+            return true;
+        }else if(kind.contains("sport") || kind.contains("industrial_facilities") || kind.contains("other") || kind.contains("glaciers") ||
+                kind.contains("outdoor")|| kind.contains("picnic_site") || kind.contains("historic") || kind.contains("natural") || kind.contains("bridges") ||
+                kind.contains("towers") || kind.contains("urban_environment") || kind.contains("amphitheatres") || kind.contains("destroyed_objects") ||
+                kind.contains("farms") || kind.contains("pyramids") || kind.contains("triumphal_archs") || kind.contains("wineries")){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private boolean recommendTravelPlan(String weather, double wind, double temp) {
         if(weather.equals("Thunderstorm") || weather.equals("Rain") || weather.equals("Snow") || weather.equals("Tornado") ||
                 weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
                 weather.equals("Ash") || temp <= -20 || temp >= 45 || wind >= 20){
             //Weather is super bad all indoor
             //100% indoor
+            return true;
         }
         else if(weather.equals("Drizzle") || weather.equals("Mist") || temp <= 0 || temp >= 35 || wind >= 10){
             //weather is meh, most indoor, no attraction
             //80% in 20% out
+            double percentage = Math.random();
+            if(percentage > 0.2){
+                return true;
+            }else{
+                return false;
+            }
+
         }else if(weather.equals("Clear") || weather.equals("Cloud")){
             //Weather is good, attraction included
             //40% in 60% out
+            double percentage = Math.random();
+            if(percentage > 0.6){
+                return true;
+            }else{
+                return false;
+            }
+
         }else{
             //In case we forget some of the index, balance both indoor and outdoor
+            double percentage = Math.random();
+            if(percentage >= 0.5){
+                return true;
+            }else{
+                return false;
+            }
         }
-        */
+
     }
 
 
