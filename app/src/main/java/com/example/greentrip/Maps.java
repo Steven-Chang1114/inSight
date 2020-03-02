@@ -114,7 +114,7 @@ public class Maps extends AppCompatActivity implements
     private void getNearByMarker() {
         String APIKEY = "5ae2e3f221c38a28845f05b69371569391d28e8ad62d7f28fac24e6f";
         Integer RADIUS = 10000;
-        Integer NUMBER_OF_OBJECTS = 500;
+        Integer NUMBER_OF_OBJECTS = 600;
 
         String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+APIKEY);
 
@@ -158,13 +158,19 @@ public class Maps extends AppCompatActivity implements
 
 
                         String emission = emission_checker(OrigionalLatitude, OrigionalLongtitude, lon, lat);
+                        double probs = Double.parseDouble(String.valueOf(Math.random()));
+                        boolean restrict;
+                        if(probs > 0.65){
+                            restrict = true;
+                        }else{
+                            restrict = false;
+                        }
 
-                        boolean a = forIndoor;
-                        if(res) {
+                        if(res && rate >= 6 && restrict) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat, lon))
                                     .title(name)
-                                    .snippet(String.valueOf(isIndoor))
+                                    .snippet(kind)
                                     .visible(true));
                         }
                     }
@@ -198,7 +204,7 @@ public class Maps extends AppCompatActivity implements
     }
 
     private boolean isAttraction(String title) {
-        if (title.contains("Street")) {
+        if (title.contains("Street") || title.contains("Buccleuch")) {
             return false;
         }else{
             return true;
@@ -222,7 +228,10 @@ public class Maps extends AppCompatActivity implements
 
 
     private boolean isIndoor(String kind) {
-        if(kind.contains("accommodations") || kind.contains("adult") || kind.contains("lighthouses") || kind.contains("architecture")){
+        if(kind.contains("bridge")){
+            return false;
+        }
+        if(kind.contains("accommodations") || kind.contains("adult") || kind.contains("lighthouses") || kind.contains("architecture")|| kind.contains("museum")){
             return true;
         }
         //else if(kind.contains("sport") || kind.contains("industrial_facilities") || kind.contains("other") || kind.contains("glaciers") || kind.contains("gardens") ||
