@@ -114,7 +114,7 @@ public class Maps extends AppCompatActivity implements
     private void getNearByMarker() {
         String APIKEY = "5ae2e3f221c38a28845f05b69371569391d28e8ad62d7f28fac24e6f";
         Integer RADIUS = 10000;
-        Integer NUMBER_OF_OBJECTS = 1000;
+        Integer NUMBER_OF_OBJECTS = 500;
 
         String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+APIKEY);
 
@@ -147,24 +147,24 @@ public class Maps extends AppCompatActivity implements
                         double lon = realCoods[0];
                         double lat = realCoods[1];
                         String title = prop.getString("name");
+                        String name = formatString(title);
 
                         boolean isIndoor = isIndoor(kind);
                         boolean forIndoor = recommendTravelPlan(wea, wind, temp);
+                        boolean isForTravel = isAttraction(title);
                         boolean res;
 
-                        if(forIndoor && isIndoor){
-                            res = true;
-                        }else{
-                            res = false;
-                        }
+                        res = forIndoor == isIndoor && isForTravel;
+
 
                         String emission = emission_checker(OrigionalLatitude, OrigionalLongtitude, lon, lat);
 
+                        boolean a = forIndoor;
                         if(res) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(lat, lon))
-                                    .title(title)
-                                    .snippet(emission)
+                                    .title(name)
+                                    .snippet(String.valueOf(isIndoor))
                                     .visible(true));
                         }
                     }
@@ -187,6 +187,24 @@ public class Maps extends AppCompatActivity implements
         lala.add(que);
     }
 
+    private String formatString(String title) {
+        if(title.length() > 20){
+            String[] list = title.split(",");
+            String res = list[list.length - 1];
+            return res;
+        }else{
+            return title;
+        }
+    }
+
+    private boolean isAttraction(String title) {
+        if (title.contains("Street")) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public String emission_checker(double originlat, double originlng, double destlng, double destlat){
         float[] results = new float[10];
         Location.distanceBetween(originlat,originlng,destlat,destlng,results);
@@ -204,19 +222,21 @@ public class Maps extends AppCompatActivity implements
 
 
     private boolean isIndoor(String kind) {
-        if(kind.contains("accommodations") || kind.contains("adult") || kind.contains("lighthouses")){
+        if(kind.contains("accommodations") || kind.contains("adult") || kind.contains("lighthouses") || kind.contains("architecture")){
             return true;
-        }else if(kind.contains("sport") || kind.contains("industrial_facilities") || kind.contains("other") || kind.contains("glaciers") ||
-                kind.contains("outdoor")|| kind.contains("picnic_site") || kind.contains("historic") || kind.contains("natural") || kind.contains("bridges") ||
-                kind.contains("towers") || kind.contains("urban_environment") || kind.contains("amphitheatres") || kind.contains("destroyed_objects") ||
-                kind.contains("farms") || kind.contains("pyramids") || kind.contains("triumphal_archs") || kind.contains("wineries")){
+        }
+        //else if(kind.contains("sport") || kind.contains("industrial_facilities") || kind.contains("other") || kind.contains("glaciers") || kind.contains("gardens") ||
+        //        kind.contains("outdoor")|| kind.contains("picnic_site") || kind.contains("historic") || kind.contains("natural") || kind.contains("bridges") ||
+          //      kind.contains("towers") || kind.contains("urban_environment") || kind.contains("amphitheatres") || kind.contains("destroyed_objects") ||
+            //    kind.contains("farms") || kind.contains("pyramids") || kind.contains("triumphal_archs") || kind.contains("wineries")){
+            //return false;}
+        else{
             return false;
-        }else{
-            return true;
         }
     }
 
     private boolean recommendTravelPlan(String weather, double wind, double temp) {
+        //Return the rate of introducing indoor event
         if(weather.equals("Thunderstorm") || weather.equals("Rain") || weather.equals("Snow") || weather.equals("Tornado") ||
                 weather.equals("Haze") || weather.equals("Smoke") || weather.equals("Dust") || weather.equals("Sand") || weather.equals("Squall") ||
                 weather.equals("Ash") || temp <= -20 || temp >= 45 || wind >= 20){
