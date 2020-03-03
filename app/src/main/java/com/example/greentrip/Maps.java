@@ -27,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -191,12 +192,31 @@ public class Maps extends AppCompatActivity implements
                             restrict = false;
                         }
 
+
                         if(res && rate >= 6 && restrict) {
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(lat, lon))
-                                    .title(name)
-                                    .snippet(kind)
-                                    .visible(true));
+                            String markerColor = getCarbonColor(OrigionalLatitude, OrigionalLongtitude, lon, lat);
+                            if(markerColor.contains("green")){
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(lat, lon))
+                                        .title(name)
+                                        .snippet(emission)
+                                        .visible(true)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            }else if(markerColor.contains("orange")){
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(lat, lon))
+                                        .title(name)
+                                        .snippet(emission)
+                                        .visible(true)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            }else if(markerColor.contains("red")){
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(lat, lon))
+                                        .title(name)
+                                        .snippet(emission)
+                                        .visible(true)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                            }
                         }
                     }
 
@@ -216,6 +236,22 @@ public class Maps extends AppCompatActivity implements
 
         RequestQueue lala = Volley.newRequestQueue(this);
         lala.add(que);
+    }
+
+    private String getCarbonColor(double originlat, double originlng, double destlng, double destlat) {
+        float[] results = new float[10];
+        Location.distanceBetween(originlat,originlng,destlat,destlng,results);
+        int cf = (int)((results[0])* 0.186);
+
+        if(cf < 50){
+            //Green
+            return "green";
+        }else if (cf < 100){
+            //Orange
+            return "orange";
+        }else{
+            return "red";
+        }
     }
 
     private String formatString(String title) {
@@ -241,12 +277,13 @@ public class Maps extends AppCompatActivity implements
         Location.distanceBetween(originlat,originlng,destlat,destlng,results);
         int cf = (int)((results[0])* 0.186);
         String CarbonFootprint;
-        if(cf <= 50) {
-            CarbonFootprint = "The Carbon Emission for Driving is " + cf + "g so WALK!!!";
+        if(cf < 50) {
+            CarbonFootprint = "The CO2 emission for Driving is " + cf + "g so WALK!!!";
+        }else if(cf<90){
+            CarbonFootprint = "The CO2 emission for Driving is " + cf + "g but you can cycle tho";
         }else{
-            CarbonFootprint = "The Carbon Emission for Driving is " + cf + "g but you can cycle tho";
-        }
-        return CarbonFootprint;
+            CarbonFootprint = "The CO2 emission for Driving is " + cf + "g can drive for a little";
+        }        return CarbonFootprint;
 
     }
 
