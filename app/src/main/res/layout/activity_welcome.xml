@@ -34,7 +34,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Weather is important for traveller!"
+        android:text="Don't let weather to stop your trip!"
         app:layout_constraintBottom_toTopOf="@+id/startTrip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

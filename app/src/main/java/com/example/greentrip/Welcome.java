@@ -91,7 +91,7 @@ public class Welcome extends AppCompatActivity {
                     String cityName = addresses.get(0).getSubAdminArea();
                     String countryName = addresses.get(0).getCountryName();
 
-                    greeting.setText("Hi You are in " + cityName + " in " + countryName + " now!" );
+                    greeting.setText("Hi we know you are in " + cityName + " right now!" );
 
                 } catch (IOException e) {
                     greeting.setText(e.toString());
