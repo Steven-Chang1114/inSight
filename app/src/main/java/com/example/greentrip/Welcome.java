@@ -84,6 +84,7 @@ public class Welcome extends AppCompatActivity {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
 
+                findWeather();
                 Geocoder geocoder = new Geocoder(Welcome.this, Locale.getDefault());
                 try {
                     List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
@@ -99,7 +100,7 @@ public class Welcome extends AppCompatActivity {
             }
         });
 
-        findWeather();
+
 
         start.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -112,7 +113,6 @@ public class Welcome extends AppCompatActivity {
 
     public void openWelcome(){
         intent = new Intent(getBaseContext(), Maps.class);
-        findWeather();
         intent.putExtra("Latitude", latitude);
         intent.putExtra("Longitude", longitude);
         intent.putExtra("weather", allData[0]);
@@ -122,8 +122,8 @@ public class Welcome extends AppCompatActivity {
     }
 
     private void findWeather(){
-        int lati = (int) 56;
-        int longti = (int) -3;
+        int lati = (int) latitude;
+        int longti = (int) longitude;
         String key = "cc0f792d36bf210e4b27018738d42901";
         final String url ="https://api.openweathermap.org/data/2.5/weather?lat="+lati+"&lon="+longti+"&appid="+key;
 

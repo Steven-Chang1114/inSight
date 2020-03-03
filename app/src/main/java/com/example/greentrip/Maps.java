@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
+import java.util.Random;
 
 
 public class Maps extends AppCompatActivity implements
@@ -64,6 +66,7 @@ public class Maps extends AppCompatActivity implements
     double temp;
     float zoomLevel = 15.0f;
     private GoogleMap mMap;
+    double probaility = -1.0;
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -80,6 +83,7 @@ public class Maps extends AppCompatActivity implements
         TextView temperature = (TextView) findViewById(R.id.temp);
         TextView windSpeed = (TextView) findViewById(R.id.wind);
         TextView weahterData = (TextView) findViewById(R.id.weather);
+        final SeekBar probCtrl = (SeekBar) findViewById(R.id.propControl);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -105,13 +109,33 @@ public class Maps extends AppCompatActivity implements
                 weahterData.setText("Weather: " + wea);
             }
         }
-        //getNearByMarker();
 
-        getNearByMarker();
+
+        getNearByMarker(0.65);
+
+        probCtrl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                probaility = (Double.parseDouble(String.valueOf(probCtrl.getProgress()))+4.5)/10;
+                mMap.clear();
+                double debug = probaility;
+                getNearByMarker(probaility);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
 
     }
-    private void getNearByMarker() {
+    private void getNearByMarker(double probaility) {
         String APIKEY = "5ae2e3f221c38a28845f05b69371569391d28e8ad62d7f28fac24e6f";
         Integer RADIUS = 10000;
         Integer NUMBER_OF_OBJECTS = 600;
@@ -160,7 +184,8 @@ public class Maps extends AppCompatActivity implements
                         String emission = emission_checker(OrigionalLatitude, OrigionalLongtitude, lon, lat);
                         double probs = Double.parseDouble(String.valueOf(Math.random()));
                         boolean restrict;
-                        if(probs > 0.65){
+
+                        if(probs > probaility){
                             restrict = true;
                         }else{
                             restrict = false;
