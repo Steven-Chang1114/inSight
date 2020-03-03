@@ -238,22 +238,6 @@ public class Maps extends AppCompatActivity implements
         lala.add(que);
     }
 
-    private String getCarbonColor(double originlat, double originlng, double destlng, double destlat) {
-        float[] results = new float[10];
-        Location.distanceBetween(originlat,originlng,destlat,destlng,results);
-        int cf = (int)((results[0])* 0.186);
-
-        if(cf < 50){
-            //Green
-            return "green";
-        }else if (cf < 100){
-            //Orange
-            return "orange";
-        }else{
-            return "red";
-        }
-    }
-
     private String formatString(String title) {
         if(title.length() > 20){
             String[] list = title.split(",");
@@ -269,6 +253,22 @@ public class Maps extends AppCompatActivity implements
             return false;
         }else{
             return true;
+        }
+    }
+
+    private String getCarbonColor(double originlat, double originlng, double destlng, double destlat) {
+        float[] results = new float[10];
+        Location.distanceBetween(originlat,originlng,destlat,destlng,results);
+        int cf = (int)((results[0])* 0.186);
+
+        if(cf < 50){
+            //Green
+            return "green";
+        }else if (cf < 90){
+            //Orange
+            return "orange";
+        }else{
+            return "red";
         }
     }
 
