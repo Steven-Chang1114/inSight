@@ -137,11 +137,11 @@ public class Maps extends AppCompatActivity implements
 
     }
     private void getNearByMarker(double probaility) {
-        String APIKEY = "5ae2e3f221c38a28845f05b69371569391d28e8ad62d7f28fac24e6f";
+        String key2 = BuildConfig.API_KEY2;
         Integer RADIUS = 10000;
         Integer NUMBER_OF_OBJECTS = 600;
 
-        String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+APIKEY);
+        String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+key2);
 
         JsonObjectRequest que = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
