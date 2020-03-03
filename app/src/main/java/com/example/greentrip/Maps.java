@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 
 public class Maps extends AppCompatActivity implements
@@ -111,13 +112,14 @@ public class Maps extends AppCompatActivity implements
             }
         }
 
+        probaility = (Double.parseDouble(String.valueOf(probCtrl.getProgress())))/10;
 
-        getNearByMarker(0.65);
+        getNearByMarker(probaility);
 
         probCtrl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                probaility = (Double.parseDouble(String.valueOf(probCtrl.getProgress()))+4.5)/10;
+                probaility = (Double.parseDouble(String.valueOf(probCtrl.getProgress())))/10.5;
                 mMap.clear();
                 double debug = probaility;
                 getNearByMarker(probaility);
@@ -138,8 +140,8 @@ public class Maps extends AppCompatActivity implements
     }
     private void getNearByMarker(double probaility) {
         String key2 = BuildConfig.API_KEY2;
-        Integer RADIUS = 10000;
-        Integer NUMBER_OF_OBJECTS = 600;
+        Integer RADIUS = 20000;
+        Integer NUMBER_OF_OBJECTS = 10000;
 
         String url = String.format("https://api.opentripmap.com/0.1/en/places/radius?radius="+RADIUS+"&lon="+OrigionalLongtitude+"&lat="+OrigionalLatitude+"&limit="+NUMBER_OF_OBJECTS+"&format=geojson&apikey="+key2);
 
@@ -176,10 +178,10 @@ public class Maps extends AppCompatActivity implements
 
                         boolean isIndoor = isIndoor(kind);
                         boolean forIndoor = recommendTravelPlan(wea, wind, temp);
-                        boolean isForTravel = isAttraction(title);
+                        boolean isForTravel = isAttraction(name);
                         boolean res;
 
-                        res = forIndoor == isIndoor && isForTravel;
+                        res = (forIndoor == isIndoor) && isForTravel;
 
 
                         String emission = emission_checker(OrigionalLatitude, OrigionalLongtitude, lon, lat);
@@ -193,7 +195,7 @@ public class Maps extends AppCompatActivity implements
                         }
 
 
-                        if(res && rate >= 6 && restrict) {
+                        if(res && rate >= 2 && restrict) {
                             String markerColor = getCarbonColor(OrigionalLatitude, OrigionalLongtitude, lon, lat);
                             if(markerColor.contains("green")){
                                 mMap.addMarker(new MarkerOptions()
@@ -241,15 +243,25 @@ public class Maps extends AppCompatActivity implements
     private String formatString(String title) {
         if(title.length() > 20){
             String[] list = title.split(",");
-            String res = list[list.length - 1];
+            String res;
+            if(list.length >= 2) {
+                res = list[list.length - 2] + ", "+list[list.length - 1];
+            }else{
+                res = list[list.length - 1];
+            }
             return res;
         }else{
             return title;
         }
     }
 
-    private boolean isAttraction(String title) {
-        if (title.contains("Street") || title.contains("Buccleuch")) {
+    public boolean stringContainsNumber( String s )
+    {
+        return Pattern.compile( "[0-9]" ).matcher( s ).find();
+    }
+
+    private boolean isAttraction(String name) {
+        if (name.contains("Street") || stringContainsNumber(name) || (name.equals("Edinburgh"))) {
             return false;
         }else{
             return true;
